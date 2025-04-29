@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h2>Bienvenido, {{ usuario['nombre'] }}!</h2>
+
+    <!-- Mostrar libros disponibles en una tabla -->
+    <h3>Libros Disponibles</h3>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Autor</th>
+                <th>Editorial</th>
+                <th>Disponible</th>
+                <th>Fecha de Devolución</th>  <!-- Nueva columna después de la disponibilidad -->
+                <th>Acción</th> <!-- Columna para el botón de "Prestar" -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for libro in libros %}
+            <tr>
+                <td>{{ libro.idlibros }}</td>
+                <td>{{ libro.titulo }}</td>
+                <td>{{ libro.autor }}</td>
+                <td>{{ libro.editorial }}</td>
+                <td>
+                    {% if libro.disponible == 1 %}
+                        Sí
+                    {% else %}
+                        No
+                    {% endif %}
+                </td>
+
+                <!-- Mostrar la fecha de devolución si el libro ha sido prestado -->
+                <td>
+                    {% if libro.fecha_devolucion %}
+                        {{ libro.fecha_devolucion }}
+                    {% else %}
+                        No disponible
+                    {% endif %}
+                </td>
+
+                <!-- Mostrar el botón "Prestar" si el libro está disponible -->
+                <td>
+                    {% if libro.disponible == 1 %}
+                        <form action="/prestar" method="post">
+                            <input type="hidden" name="idlibro" value="{{ libro.idlibros }}">
+                            <button type="submit">Prestar</button>
+                        </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Enlace para cerrar sesión -->
+    <br>
+    <a href="/logout">Cerrar sesión</a>
+</body>
+</html>
